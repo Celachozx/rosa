@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Una rosa para ti</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{
+  --noche1:#1a0a2e; --noche2:#3b0d3f; --alba:#7a1f4d;
+  --rosa:#d61f4c; --oro:#f6d7a7; --crema:#fff1e6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  min-height:100%;
+  background:radial-gradient(ellipse at 50% 75%, var(--alba) 0%, var(--noche2) 38%, var(--noche1) 80%);
+  color:var(--crema);
+  font-family:'Cormorant Garamond',Georgia,serif;
+  overflow-x:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:16px 16px 40px;
+}
+canvas#fondo{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.escena{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%}
+svg#rosa{width:min(340px,80vw);height:auto;overflow:visible;filter:drop-shadow(0 0 28px rgba(255,80,120,.35))}
+
+/* Animaciones de la rosa */
+.tallo{stroke-dasharray:420;stroke-dashoffset:420;animation:dibujar 2.2s ease-out .2s forwards}
+@keyframes dibujar{to{stroke-dashoffset:0}}
+.hoja,.espina{transform-box:fill-box;opacity:0;animation:aparecer 1s ease-out forwards}
+.hoja.izq{transform-origin:100% 100%}
+.hoja.der{transform-origin:0% 100%}
+.hoja{transform:scale(0)}
+@keyframes aparecer{to{opacity:1;transform:scale(1)}}
+.espina{animation-delay:2.2s}
+.petalo{transform-box:fill-box;transform-origin:50% 100%;opacity:0;transform:scale(.1);
+  animation:florecer 1.6s cubic-bezier(.2,.8,.3,1.1) forwards}
+@keyframes florecer{to{opacity:1;transform:scale(1)}}
+.flor{transform-box:fill-box;transform-origin:50% 100%;animation:mecer 6s ease-in-out 6s infinite}
+@keyframes mecer{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+.brillo{animation:latido 3.2s ease-in-out 6s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes latido{0%,100%{opacity:.35}50%{opacity:.8}}
+
+/* Texto */
+.mensaje{margin-top:18px;text-align:center;max-width:560px;padding:0 8px}
+.titulo{font-family:'Great Vibes',cursive;font-size:clamp(2.6rem,9vw,4.2rem);color:var(--oro);
+  text-shadow:0 0 22px rgba(246,215,167,.35);opacity:0;animation:suave 2s ease 5.2s forwards}
+.texto{font-size:clamp(1.15rem,3.6vw,1.45rem);line-height:1.65;font-style:italic;margin-top:10px;min-height:9.5em}
+.texto span{opacity:0;transition:opacity .9s ease}
+.texto span.on{opacity:1}
+.firma{font-family:'Pacifico',cursive;font-size:1.6rem;letter-spacing:.03em;color:var(--oro);margin-top:6px;opacity:0;transition:opacity 2s ease}
+.firma.on{opacity:1}
+@keyframes suave{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01s!important;animation-delay:0s!important}
+}
+</style>
+</head>
+<body>
+<canvas id="fondo"></canvas>
+
+<div class="escena">
+<svg id="rosa" viewBox="0 0 300 470" role="img" aria-label="Rosa roja animada">
+  <defs>
+    <radialGradient id="gP" cx="50%" cy="85%" r="90%">
+      <stop offset="0" stop-color="#7d0b26"/><stop offset=".55" stop-color="#c2173f"/><stop offset="1" stop-color="#f0507a"/>
+    </radialGradient>
+    <radialGradient id="gP2" cx="50%" cy="90%" r="95%">
+      <stop offset="0" stop-color="#5e0620"/><stop offset=".6" stop-color="#a80f37"/><stop offset="1" stop-color="#e23c68"/>
+    </radialGradient>
+    <linearGradient id="gCentro" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#4a0418"/><stop offset="1" stop-color="#b3113a"/>
+    </linearGradient>
+    <linearGradient id="gHoja" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4fa36a"/><stop offset="1" stop-color="#14502f"/>
+    </linearGradient>
+    <linearGradient id="gTallo" x1="0" x2="1">
+      <stop offset="0" stop-color="#1c6b3c"/><stop offset="1" stop-color="#2f9558"/>
+    </linearGradient>
+    <radialGradient id="gLuz" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Tallo -->
+  <path class="tallo" d="M150 200 C146 270 158 340 150 462" fill="none" stroke="url(#gTallo)" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- Hojas -->
+  <g class="hoja izq" style="animation-delay:1.8s">
+    <path d="M148 372 C110 372 68 350 52 312 C96 306 138 330 148 372Z" fill="url(#gHoja)"/>
+    <path d="M148 372 C118 352 88 330 62 316" stroke="#a6dfb5" stroke-width="1.6" fill="none" opacity=".6"/>
+  </g>
+  <g class="hoja der" style="animation-delay:2.1s">
+    <path d="M152 322 C192 322 236 300 252 262 C206 256 162 282 152 322Z" fill="url(#gHoja)"/>
+    <path d="M152 322 C184 302 214 280 240 266" stroke="#a6dfb5" stroke-width="1.6" fill="none" opacity=".6"/>
+  </g>
+  <!-- Espinas -->
+  <path class="espina" d="M149 286 l-13 -7 l14 -2z" fill="#0e3d24"/>
+  <path class="espina" d="M152 416 l14 -5 l-13 -8z" fill="#0e3d24"/>
+  <path class="espina" d="M150 250 l13 -6 l-14 -3z" fill="#0e3d24"/>
+
+  <!-- Flor -->
+  <g class="flor">
+    <!-- Sépalos -->
+    <g style="animation-delay:.6s" class="petalo"><path d="M150 214 C120 212 96 196 84 176 C112 184 136 196 150 214Z" fill="#2a8a4e"/></g>
+    <g style="animation-delay:.7s" class="petalo"><path d="M150 214 C180 212 204 196 216 176 C188 184 164 196 150 214Z" fill="#2a8a4e"/></g>
+    <g style="animation-delay:.8s" class="petalo"><path d="M150 216 C146 200 148 186 150 172 C152 186 154 200 150 216Z" fill="#1f7a42"/></g>
+
+    <!-- Pétalos exteriores (atrás) -->
+    <path class="petalo" style="animation-delay:1.2s" fill="url(#gP2)" d="M150 210 C92 214 56 162 66 108 C84 132 112 140 150 128 C188 140 216 132 234 108 C244 162 208 214 150 210Z"/>
+    <path class="petalo" style="animation-delay:1.5s" fill="url(#gP)" d="M150 208 C104 214 74 176 80 128 C90 100 112 88 132 92 C120 120 128 170 150 208Z"/>
+    <path class="petalo" style="animation-delay:1.7s" fill="url(#gP)" d="M150 208 C196 214 226 176 220 128 C210 100 188 88 168 92 C180 120 172 170 150 208Z"/>
+
+    <!-- Capa media -->
+    <path class="petalo" style="animation-delay:2.4s" fill="url(#gP2)" d="M150 202 C112 204 92 172 100 136 C108 110 130 100 150 106 C170 100 192 110 200 136 C208 172 188 204 150 202Z"/>
+    <path class="petalo" style="animation-delay:2.8s" fill="url(#gP)" d="M150 200 C120 196 106 166 116 132 C124 118 138 114 148 118 C136 146 138 176 150 200Z"/>
+    <path class="petalo" style="animation-delay:3s" fill="url(#gP)" d="M150 200 C180 196 194 166 184 132 C176 118 162 114 152 118 C164 146 162 176 150 200Z"/>
+
+    <!-- Capa interior -->
+    <path class="petalo" style="animation-delay:3.6s" fill="url(#gP2)" d="M150 190 C128 188 118 160 126 138 C132 124 144 118 150 120 C156 118 168 124 174 138 C182 160 172 188 150 190Z"/>
+    <path class="petalo" style="animation-delay:3.9s" fill="url(#gP)" d="M150 188 C134 180 130 158 138 140 C142 132 148 128 152 128 C146 148 148 170 150 188Z"/>
+    <path class="petalo" style="animation-delay:4.1s" fill="url(#gP)" d="M150 188 C166 180 170 158 162 140 C158 132 152 128 148 128 C154 148 152 170 150 188Z"/>
+
+    <!-- Corazón espiralado -->
+    <path class="petalo" style="animation-delay:4.5s" fill="url(#gCentro)" d="M150 172 C134 172 128 152 138 138 C144 130 156 128 162 136 C168 146 164 160 154 162 C148 164 142 158 146 150 C148 146 154 146 156 150" />
+    <path class="petalo" style="animation-delay:4.7s" fill="none" stroke="#3d0314" stroke-width="2" stroke-linecap="round" d="M150 174 C136 170 132 152 141 141 C148 133 160 136 161 146 C161 154 152 158 148 152"/>
+
+    <!-- Bordes / nervaduras suaves -->
+    <g fill="none" stroke="#ff9db6" stroke-width="1.3" stroke-linecap="round" opacity=".45" class="petalo" style="animation-delay:4.9s">
+      <path d="M96 118 C104 138 120 150 138 154"/>
+      <path d="M204 118 C196 138 180 150 162 154"/>
+      <path d="M120 196 C112 176 116 156 124 144"/>
+      <path d="M180 196 C188 176 184 156 176 144"/>
+    </g>
+
+    <!-- Brillos -->
+    <ellipse class="brillo" cx="112" cy="130" rx="12" ry="26" fill="url(#gLuz)" transform="rotate(20 112 130)"/>
+    <ellipse class="brillo" cx="190" cy="126" rx="9" ry="20" fill="url(#gLuz)" transform="rotate(-24 190 126)" style="animation-delay:7s"/>
+
+    <!-- Gotas de rocío -->
+    <g class="petalo" style="animation-delay:5.4s">
+      <circle cx="104" cy="150" r="3.6" fill="#ffd9e3" opacity=".85"/><circle cx="103" cy="149" r="1.2" fill="#fff"/>
+      <circle cx="200" cy="146" r="3" fill="#ffd9e3" opacity=".85"/><circle cx="199" cy="145" r="1" fill="#fff"/>
+      <circle cx="150" cy="106" r="2.6" fill="#ffd9e3" opacity=".85"/>
+    </g>
+  </g>
+</svg>
+
+<div class="mensaje">
+  <h1 class="titulo">Para ti, mi amor</h1>
+  <p class="texto" id="texto"></p>
+  <p class="firma" id="firma">Yissel</p>
+</div>
+</div>
+
+<script>
+/* ===== Mensaje (edita aquí lo que quieras) ===== */
+const frases = [
+  "Eres la flor más hermosa de mi vida,",
+  "la que ilumina mis días y cuida mis sueños.",
+  "Contigo aprendí que el amor es ternura,",
+  "es risa, es calma y es hogar.",
+  "Gracias por ser mi mundo, mi razón y mi sonrisa.",
+  "Te amo hoy, mañana y siempre."
+];
+const cont = document.getElementById('texto');
+frases.forEach(f => {
+  const s = document.createElement('span');
+  s.textContent = f + ' ';
+  cont.appendChild(s);
+  cont.appendChild(document.createElement('br'));
+});
+const spans = cont.querySelectorAll('span');
+spans.forEach((s,i)=> setTimeout(()=>s.classList.add('on'), 6000 + i*1700));
+setTimeout(()=>document.getElementById('firma').classList.add('on'), 6000 + spans.length*1700 + 300);
+
+/* ===== Fondo: estrellas y pétalos que caen ===== */
+const cv = document.getElementById('fondo'), ctx = cv.getContext('2d');
+let W, H, estrellas = [], petalos = [], luciernagas = [];
+function ajustar(){
+  W = cv.width = innerWidth; H = cv.height = innerHeight;
+  estrellas = Array.from({length: Math.round(W*H/9000)}, () => ({
+    x: Math.random()*W, y: Math.random()*H*0.8, r: Math.random()*1.3+.3, f: Math.random()*6.28, v: Math.random()*.02+.005
+  }));
+}
+addEventListener('resize', ajustar); ajustar();
+
+function nuevoPetalo(inicio){
+  return {
+    x: Math.random()*W, y: inicio ? Math.random()*H : -20,
+    s: Math.random()*7+5, vy: Math.random()*.7+.4, vx: Math.random()*.6-.3,
+    a: Math.random()*6.28, va: (Math.random()-.5)*.03, o: Math.random()*.4+.35, t: Math.random()*6.28
+  };
+}
+for(let i=0;i<22;i++) petalos.push(nuevoPetalo(true));
+for(let i=0;i<26;i++) luciernagas.push({x:Math.random()*W,y:Math.random()*H,t:Math.random()*6.28,v:Math.random()*.01+.006,r:Math.random()*2+1});
+
+function dibujaPetalo(p){
+  ctx.save();
+  ctx.translate(p.x,p.y); ctx.rotate(p.a); ctx.scale(1, Math.abs(Math.cos(p.t))*.6+.4);
+  ctx.globalAlpha = p.o;
+  const g = ctx.createLinearGradient(0,-p.s,0,p.s);
+  g.addColorStop(0,'#ff6f93'); g.addColorStop(1,'#a80f37');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(0,-p.s);
+  ctx.bezierCurveTo(p.s,-p.s*.6,p.s*.8,p.s*.8,0,p.s);
+  ctx.bezierCurveTo(-p.s*.8,p.s*.8,-p.s,-p.s*.6,0,-p.s);
+  ctx.fill();
+  ctx.restore();
+}
+
+function bucle(){
+  ctx.clearRect(0,0,W,H);
+  for(const e of estrellas){
+    e.f += e.v;
+    ctx.globalAlpha = .35 + Math.abs(Math.sin(e.f))*.65;
+    ctx.fillStyle = '#fff4dd';
+    ctx.beginPath(); ctx.arc(e.x,e.y,e.r,0,6.28); ctx.fill();
+  }
+  for(const l of luciernagas){
+    l.t += l.v;
+    l.x += Math.cos(l.t*3)*.35; l.y += Math.sin(l.t*2)*.3;
+    const a = Math.abs(Math.sin(l.t*2));
+    const g = ctx.createRadialGradient(l.x,l.y,0,l.x,l.y,l.r*7);
+    g.addColorStop(0,'rgba(255,220,150,'+(a*.8)+')'); g.addColorStop(1,'rgba(255,220,150,0)');
+    ctx.globalAlpha = 1; ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(l.x,l.y,l.r*7,0,6.28); ctx.fill();
+  }
+  for(let i=0;i<petalos.length;i++){
+    const p = petalos[i];
+    p.y += p.vy; p.x += p.vx + Math.sin(p.t)*.5; p.a += p.va; p.t += .03;
+    dibujaPetalo(p);
+    if(p.y > H+20) petalos[i] = nuevoPetalo(false);
+  }
+  requestAnimationFrame(bucle);
+}
+bucle();
+</script>
+</body>
+</html>
